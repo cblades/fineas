@@ -12,7 +12,7 @@ setup(
     version='0.1.0',
     description='Annotation-driven, Thread-safe, transition-focused Finite State Machines.',
     install_requires=[
-        'wrapt>=1.12.1<1.13.0'
+        'wrapt>=1.12.1,<1.13.0'
     ],
     long_description=readme,
     long_description_content_type='text/markdown',
