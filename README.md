@@ -132,7 +132,7 @@ Python 3.6 or higher
 wrapt 1.12.x
 
 ## Release Notes
-1.0.0 (12 March, 2021):
+1.0.1 (12 March, 2021):
 - Minor Cleanup
 - Move to poetry
 - Basic test coverage
