@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "fineas"
-version = "1.0.0"
-description = ""
+version = "1.0.1"
+description = "A simple, decorator-based, transition-focused Finite State Machine implementation."
 authors = ["Chris Blades"]
 license = "Apache 2"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
