@@ -2,10 +2,12 @@
 
 A simple, thread-safe, decorator-based, transition-focused Finite State Machine implementation.
 
+Possible Use Cases:
+- Configuration management from multiple sources.
+- Keeping track of state during complex system startup.
+- Tracking state while parsing.
+
 ```python
-from fineas import state_machine
-
-
 from fineas import state_machine
 
 
@@ -130,6 +132,11 @@ Python 3.6 or higher
 wrapt 1.12.x
 
 ## Release Notes
+1.0.0 (12 March, 2021):
+- Minor Cleanup
+- Move to poetry
+- Basic test coverage
+- Bump to 1.0.0 due to no issues being found in the last year.
 
-0.9 (07 March, 2021):
+0.1.0 (07 March, 2021):
 - Initial Release

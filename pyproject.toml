@@ -3,7 +3,7 @@ name = "fineas"
 version = "0.1.0"
 description = ""
 authors = ["Chris Blades"]
-license = "Apache 2.0"
+license = "Apache 2"
 
 [tool.poetry.dependencies]
 python = "^3.6"

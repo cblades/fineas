@@ -1,7 +1,10 @@
 from collections import deque
-from typing import Union, List
+from typing import TYPE_CHECKING
 
 import wrapt
+
+if TYPE_CHECKING:  # nocov
+    from typing import Union, List
 
 
 class TransitionException(Exception):
@@ -13,11 +16,16 @@ class TransitionException(Exception):
         return self.msg
 
 
+def listify(value):
+    """Turn value into a list if it isn't already one."""
+    return value if isinstance(value, (list, tuple)) else (value,)
+
+
 class FSMManager:
     """Defines a decorator-based finite state machine manager."""
 
     def transition(self,
-                   source: Union[str, List[str]], dest: str,
+                   source: 'Union[str, List[str]]', dest: str,
                    error_state=None, failed_state=None, reraise_error=True):
         """Defines a transition from one or more source states to a destination state.
 
@@ -34,7 +42,7 @@ class FSMManager:
             failed_state: If decorated method calls fail_transition, transition to this state.
             reraise_error: If decorated method raises an exception, re-raise that exception.
         """
-        source = self._listify(source)
+        source = listify(source)
 
         @wrapt.decorator
         def wrap(wrapped, instance, args, kwargs):
@@ -53,7 +61,7 @@ class FSMManager:
 
                     try:
                         returnable = wrapped(*args, fail_transition=_fail, **kwargs)
-                    except TypeError as t:
+                    except TypeError:
                         returnable = wrapped(*args, **kwargs)
 
                     if failed and failed_state:
@@ -85,14 +93,9 @@ class FSMManager:
                 self.__format_transition(old_state, transition, dest))
 
     @staticmethod
-    def _listify(value):
-        """Turn value into a list if it isn't already one."""
-        return value if isinstance(value, (list, tuple)) else [value]
-
-    @staticmethod
-    def __format_transition(source: Union[str, List[str]], transition: str, dest: str):
+    def __format_transition(source: 'Union[str, List[str]]', transition: str, dest: str):
         """Pretty-print a state transition."""
-        return f'({" OR ".join(FSMManager._listify(source))})--[{transition}]->({dest})'
+        return f'({" OR ".join(listify(source))})--[{transition}]->({dest})'
 
     def __call__(self, initial_state: str, store_history=False, max_history=100):
         """Turn all instances of a class into state machines.
