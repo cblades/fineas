@@ -93,4 +93,5 @@ def test_invalid_transition():
     with pytest.raises(TransitionException) as exc:
         t.ready()
 
-    assert str(exc.value) == 'Wrong state for transition.  Expected ((configured)--[ready]->(scheduled)), but was (new)--[ready]->(scheduled)'
+    assert str(exc.value) == 'Wrong state for transition. Expected ((configured)--[ready]->(' \
+                             'scheduled)), but was (new)--[ready]->(scheduled).'

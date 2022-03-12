@@ -6,7 +6,7 @@ authors = ["Chris Blades"]
 license = "Apache 2"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.2"
 wrapt = "^1.14.0"
 
 [tool.poetry.dev-dependencies]

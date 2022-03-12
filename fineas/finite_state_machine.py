@@ -8,8 +8,8 @@ if TYPE_CHECKING:  # nocov
 
 
 class TransitionException(Exception):
-    def __init__(self, msg, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, msg):
+        super().__init__()
         self.msg = msg
 
     def __str__(self):
@@ -40,7 +40,7 @@ class FSMManager:
             dest: The state this transition is to.
             error_state: If decorated method raises an error, transition to this state.
             failed_state: If decorated method calls fail_transition, transition to this state.
-            reraise_error: If decorated method raises an exception, re-raise that exception.
+            reraise_error: If decorated method raises an exception, raise that exception.
         """
         source = listify(source)
 
@@ -48,10 +48,11 @@ class FSMManager:
         def wrap(wrapped, instance, args, kwargs):
             with wrapt.synchronized(instance):
                 if instance.state not in source:
+                    expected_str = self.__format_transition(source, wrapped.__name__, dest)
+                    got_str = self.__format_transition(instance.state, wrapped.__name__, dest)
                     raise TransitionException(
-                        f'Wrong state for transition.  '
-                        f'Expected ({self.__format_transition(source, wrapped.__name__, dest)}), '
-                        f'but was {self.__format_transition(instance.state, wrapped.__name__, dest)}')
+                        f'Wrong state for transition. Expected ({expected_str}), but was '
+                        f'{got_str}.')
                 try:
                     failed = False
 
@@ -82,7 +83,8 @@ class FSMManager:
         """Transitions the objects state and appends the transition to the object's history.
 
         Args:
-            instance: the object being transitioned (current state will be taken from instance.state
+            instance: the object being transitioned (current state will be taken from
+                      instance.state)
             transition: the name of the transition being performed.
             dest: the destination state.
         """
@@ -103,12 +105,12 @@ class FSMManager:
         Required to use @state_machine.transition() decorator.
 
         Args:
-            initial_state: the initial state of the each instance of this type.
+            initial_state: the initial state of each instance of this type.
             store_history: Flag to enable storing a log of state transitions.
             max_history: The maximum number of history items to store (default 100)
         """
         @wrapt.decorator
-        def wrap(clazz, instance, args, kwargs):
+        def wrap(clazz, _, args, kwargs):
             old_init = clazz.__init__
 
             def new_init(self, *args, **kwargs):
